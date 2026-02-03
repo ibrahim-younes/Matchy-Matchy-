@@ -19,19 +19,28 @@ public class CardView : MonoBehaviour, IPointerClickHandler
     private MatchGameManager game;
 
     // Called when a card is created by the GameManager
-    public void Init(int faceId, Sprite faceSprite, Sprite backSprite, MatchGameManager manager)
+    public void Init(int faceId, Sprite faceSprite, Sprite backSprite, MatchGameManager manager, bool forceFaceDown = true)
     {
         FaceId = faceId;
         game = manager;
 
-        IsMatched = false;
+        if (forceFaceDown)
+        {
+            IsMatched = false;
+            IsFaceUp = false;
+        }
+    
         IsAnimating = false;
-        IsFaceUp = false;
 
         backImage.sprite = backSprite;
         frontImage.sprite = faceSprite;
 
-        SetVisual(false);
+        // Only set visual to face down if forcing it
+        if (forceFaceDown)
+        {
+            SetVisual(false);
+        }
+    
         transform.localScale = Vector3.one;
     }
 
@@ -54,7 +63,8 @@ public class CardView : MonoBehaviour, IPointerClickHandler
 
     private void SetFace(bool up, bool instant)
     {
-        if (IsMatched) return;
+        
+        if (IsMatched && !up) return;
 
         IsFaceUp = up;
         SetVisual(up);
@@ -71,18 +81,26 @@ public class CardView : MonoBehaviour, IPointerClickHandler
         IsAnimating = true;
 
         float half = Mathf.Max(0.01f, flipDuration * 0.5f);
+        float startTime = Time.realtimeSinceStartup;
 
-        for (float t = 0; t < half; t += Time.unscaledDeltaTime)
+        // First half: shrink to flat
+        while (Time.realtimeSinceStartup - startTime < half)
         {
-            transform.localScale = new Vector3(Mathf.Lerp(1f, 0f, t / half), 1f, 1f);
+            float t = (Time.realtimeSinceStartup - startTime) / half;
+            transform.localScale = new Vector3(Mathf.Lerp(1f, 0f, t), 1f, 1f);
             yield return null;
         }
 
+        // Change face
         SetFace(toFaceUp, false);
 
-        for (float t = 0; t < half; t += Time.unscaledDeltaTime)
+        startTime = Time.realtimeSinceStartup;
+    
+        // Second half: expand back
+        while (Time.realtimeSinceStartup - startTime < half)
         {
-            transform.localScale = new Vector3(Mathf.Lerp(0f, 1f, t / half), 1f, 1f);
+            float t = (Time.realtimeSinceStartup - startTime) / half;
+            transform.localScale = new Vector3(Mathf.Lerp(0f, 1f, t), 1f, 1f);
             yield return null;
         }
 

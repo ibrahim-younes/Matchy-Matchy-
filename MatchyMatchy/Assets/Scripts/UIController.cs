@@ -1,6 +1,6 @@
 // Controls all UI elements, menus, and HUD updates based on the game state.
 
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
@@ -70,7 +70,7 @@ public class UIController : MonoBehaviour
         if (wellDoneObject != null) wellDoneObject.SetActive(true);
     }
 
-    // ---- UI Buttons ----
+    // =========== UI Buttons ===========
 
     public void Pause()
     {
@@ -86,8 +86,9 @@ public class UIController : MonoBehaviour
     {
         if (game != null)
         {
-            game.GetSaveData(out int levelIndex, out int rows, out int cols, out int score, out int turns);
-            SaveManager.SaveGame(levelIndex, rows, cols, score, turns);
+            game.GetSaveData(out int levelIndex, out int rows, out int cols, 
+                out int score, out int turns, out List<CardView> cards);
+            SaveManager.SaveGame(levelIndex, rows, cols, score, turns, cards);
         }
 
         Time.timeScale = 1f;
@@ -101,7 +102,7 @@ public class UIController : MonoBehaviour
         game?.StartNextLevel();
     }
 
-    // ---- Pause logic ----
+    // =========== Pause logic ===========
 
     private void SetPaused(bool value)
     {
