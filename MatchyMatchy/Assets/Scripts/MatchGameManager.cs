@@ -1,3 +1,5 @@
+// Manages the gameplay flow, logic, and state of a memory card matching game.
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +9,12 @@ using UnityEngine.UI;
 public struct GridSize
 {
     public int rows, cols;
-    public GridSize(int r, int c) { rows = r; cols = c; }
+
+    public GridSize(int r, int c)
+    {
+        rows = r;
+        cols = c;
+    }
 }
 
 public class MatchGameManager : MonoBehaviour
@@ -29,13 +36,10 @@ public class MatchGameManager : MonoBehaviour
         new GridSize(5,6),
         new GridSize(3,3),
     };
-    
+
     [Header("Start Reveal")]
     [SerializeField] private bool revealAllAtStart = true;
     [SerializeField] private float startRevealDuration = 2f;
-
-    [Tooltip("If true: choose next level randomly. If false: cycle in order.")]
-    [SerializeField] private bool randomizeNextLevel = false;
 
     [Header("Odd Grid Handling")]
     [SerializeField] private bool allowOddByBlockingOneSlot = true;
@@ -50,7 +54,6 @@ public class MatchGameManager : MonoBehaviour
     [Header("Sound")]
     [SerializeField] private SoundContorller sounds;
 
-    // ---- Public state (read-only) ----
     public int Score => score;
     public int Turns => turns;
     public int CurrentLevelIndex => currentLevelIndex;
@@ -59,12 +62,10 @@ public class MatchGameManager : MonoBehaviour
     public bool IsGameOver => isGameOver;
     public bool IsPaused => isPaused;
 
-    // ---- Events for UIController ----
-    public System.Action<int, int> OnStatsChanged; // score, turns
+    public System.Action<int, int> OnStatsChanged;
     public System.Action OnGameOver;
     public System.Action OnNewLevel;
 
-    // ---- Internal state ----
     private int score;
     private int turns;
 
@@ -77,19 +78,15 @@ public class MatchGameManager : MonoBehaviour
     private bool isPaused;
     private bool inputLocked;
 
-
     private int currentLevelIndex;
     private int currentRows;
     private int currentCols;
 
     private void Start()
     {
-        if (!ValidateRefs()) return;
-
         if (levels == null || levels.Count == 0)
             levels = new List<GridSize> { new GridSize(2, 2) };
 
-        // Load save if exists
         if (SaveManager.HasSave())
         {
             SaveManager.LoadGame(out currentLevelIndex, out currentRows, out currentCols, out score, out turns);
@@ -104,7 +101,7 @@ public class MatchGameManager : MonoBehaviour
         }
     }
 
-    // Called by UIController "Continue" button (after Well Done)
+    // ===================== LEVEL FLOW =====================
     public void StartNextLevel()
     {
         if (levels == null || levels.Count == 0)
@@ -113,9 +110,8 @@ public class MatchGameManager : MonoBehaviour
             return;
         }
 
-        currentLevelIndex = randomizeNextLevel
-            ? Random.Range(0, levels.Count)
-            : (currentLevelIndex + 1) % levels.Count;
+        // Always go to the next level in order
+        currentLevelIndex = (currentLevelIndex + 1) % levels.Count;
 
         var s = levels[currentLevelIndex];
         StartLevel(s.rows, s.cols, preserveStats: false);
@@ -124,7 +120,6 @@ public class MatchGameManager : MonoBehaviour
     public void SetPaused(bool paused)
     {
         isPaused = paused;
-        // We keep timeScale control in UIController, so game logic stays pure.
     }
 
     private void StartLevel(int rows, int cols, bool preserveStats)
@@ -146,12 +141,12 @@ public class MatchGameManager : MonoBehaviour
 
         OnNewLevel?.Invoke();
         OnStatsChanged?.Invoke(score, turns);
-        
+
         if (revealAllAtStart)
             StartCoroutine(RevealAllCardsAtStart());
     }
 
-    // Used by UIController when saving
+    // ===================== SAVE =====================
     public void GetSaveData(out int levelIndex, out int rows, out int cols, out int outScore, out int outTurns)
     {
         levelIndex = currentLevelIndex;
@@ -161,6 +156,7 @@ public class MatchGameManager : MonoBehaviour
         outTurns = turns;
     }
 
+    // ===================== CARD INTERACTION =====================
     public void TryFlip(CardView card)
     {
         if (isGameOver || isPaused || inputLocked) return;
@@ -193,31 +189,29 @@ public class MatchGameManager : MonoBehaviour
                 StartCoroutine(CompareWorker());
         }
     }
-    
+
+    // ===================== START REVEAL =====================
     private IEnumerator RevealAllCardsAtStart()
     {
         inputLocked = true;
 
-        // make sure any leftover comparisons are cleared
         faceUpUnmatched.Clear();
         compareQueue.Clear();
 
-        // show all cards instantly (no animation)
-        for (int i = 0; i < all.Count; i++)
-            if (all[i] != null && !all[i].IsMatched)
-                all[i].ForceFaceUpInstant();
-        
-        // wait for a couple of seconds
+        foreach (var card in all)
+            if (card != null && !card.IsMatched)
+                card.ForceFaceUpInstant();
+
         yield return new WaitForSecondsRealtime(startRevealDuration);
 
-        // hide all cards again instantly
-        for (int i = 0; i < all.Count; i++)
-            if (all[i] != null && !all[i].IsMatched)
-                all[i].ForceFaceDownInstant();
+        foreach (var card in all)
+            if (card != null && !card.IsMatched)
+                card.ForceFaceDownInstant();
 
         inputLocked = false;
     }
 
+    // ===================== MATCH COMPARISON =====================
     private IEnumerator CompareWorker()
     {
         compareWorkerRunning = true;
@@ -225,7 +219,6 @@ public class MatchGameManager : MonoBehaviour
         while (compareQueue.Count > 0)
         {
             var (a, b) = compareQueue.Dequeue();
-
             yield return new WaitForSecondsRealtime(revealBeforeCompare);
 
             if (isGameOver || isPaused) continue;
@@ -247,7 +240,6 @@ public class MatchGameManager : MonoBehaviour
             else
             {
                 sounds?.PlayMismatch();
-
                 yield return new WaitForSecondsRealtime(revealMismatchBeforeFlipDown);
 
                 if (!isGameOver && !isPaused)
@@ -268,7 +260,6 @@ public class MatchGameManager : MonoBehaviour
     {
         isGameOver = true;
 
-        // finishing a level invalidates save (optional but recommended)
         SaveManager.ClearSave();
 
         sounds?.PlayGameOver();
@@ -278,6 +269,7 @@ public class MatchGameManager : MonoBehaviour
         faceUpUnmatched.Clear();
     }
 
+    // ===================== BOARD SETUP =====================
     private void SetupBoard(int rows, int cols)
     {
         if (faceSprites == null || faceSprites.Count == 0)
@@ -309,13 +301,10 @@ public class MatchGameManager : MonoBehaviour
 
     private void SpawnDeck(List<int> deck)
     {
-        for (int i = 0; i < deck.Count; i++)
+        foreach (int id in deck)
         {
-            int id = deck[i];
-            Sprite face = faceSprites[id];
-
             var cv = Instantiate(cardPrefab, gridParent, false);
-            cv.Init(id, face, backSprite, this);
+            cv.Init(id, faceSprites[id], backSprite, this);
             all.Add(cv);
         }
     }
@@ -329,8 +318,8 @@ public class MatchGameManager : MonoBehaviour
     private List<int> BuildDeckFaceIds(int totalCards)
     {
         int pairs = totalCards / 2;
-
         var deck = new List<int>(totalCards);
+
         for (int i = 0; i < pairs; i++)
         {
             int id = i % faceSprites.Count;
@@ -347,17 +336,18 @@ public class MatchGameManager : MonoBehaviour
         return deck;
     }
 
+    // ===================== CLEANUP =====================
     private void ClearBoard()
     {
         faceUpUnmatched.Clear();
         compareQueue.Clear();
         compareWorkerRunning = false;
 
-        for (int i = 0; i < all.Count; i++)
-            if (all[i] != null) Destroy(all[i].gameObject);
+        foreach (var card in all)
+            if (card != null)
+                Destroy(card.gameObject);
         all.Clear();
 
-        // remove non-card children (spacers)
         for (int i = gridParent.childCount - 1; i >= 0; i--)
         {
             var child = gridParent.GetChild(i);
@@ -368,20 +358,10 @@ public class MatchGameManager : MonoBehaviour
 
     private bool AllMatched()
     {
-        for (int i = 0; i < all.Count; i++)
-            if (all[i] != null && !all[i].IsMatched)
+        foreach (var card in all)
+            if (card != null && !card.IsMatched)
                 return false;
 
         return all.Count > 0;
-    }
-
-    private bool ValidateRefs()
-    {
-        if (gridParent == null || cardPrefab == null || backSprite == null)
-        {
-            Debug.LogError("MatchGameManager: Missing references (gridParent/cardPrefab/backSprite).");
-            return false;
-        }
-        return true;
     }
 }

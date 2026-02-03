@@ -1,3 +1,5 @@
+// Resizes a GridLayoutGroup so all grid cells fit evenly and remain square.
+
 using UnityEngine;
 using UnityEngine.UI;
 

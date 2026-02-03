@@ -1,8 +1,7 @@
+// Handles saving and loading game progress using PlayerPrefs.
+
 using UnityEngine;
 
-/// <summary>
-/// Handles saving and loading game progress using PlayerPrefs.
-/// </summary>
 public static class SaveManager
 {
     private const string HAS_SAVE = "HAS_SAVE";

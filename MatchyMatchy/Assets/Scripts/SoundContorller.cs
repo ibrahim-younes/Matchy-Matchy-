@@ -1,3 +1,5 @@
+// Handles playback of simple gameplay sound effects with volume control.
+
 using UnityEngine;
 
 public class SoundContorller : MonoBehaviour

@@ -476,9 +476,6 @@ MonoBehaviour:
   mainMenuSceneIndex: 0
   gameplayCanvas: {fileID: 84987636}
   wellDoneObject: {fileID: 1149596674}
-  wellDonePanelRect: {fileID: 1149596678}
-  popScale: 1.08
-  popDuration: 0.22
 --- !u!4 &108782560
 Transform:
   m_ObjectHideFlags: 0
@@ -864,18 +861,22 @@ MonoBehaviour:
   - {fileID: 21300000, guid: cbdb31b12816dcc468e4627ff0c02f30, type: 3}
   - {fileID: 21300000, guid: 6e7a27fdca2ad414bb428fe692870b50, type: 3}
   - {fileID: 21300000, guid: 98872677e6ebd3e43988355a4e299c48, type: 3}
+  - {fileID: 21300000, guid: b5ca28a0f6f6f8d4fac1afb0426d7ec8, type: 3}
   levels:
   - rows: 2
     cols: 2
+  - rows: 3
+    cols: 4
   - rows: 4
     cols: 4
   - rows: 5
     cols: 6
-  - rows: 3
-    cols: 3
+  - rows: 6
+    cols: 6
+  - rows: 6
+    cols: 7
   revealAllAtStart: 1
   startRevealDuration: 2
-  randomizeNextLevel: 0
   allowOddByBlockingOneSlot: 1
   revealBeforeCompare: 0.35
   revealMismatchBeforeFlipDown: 0.55

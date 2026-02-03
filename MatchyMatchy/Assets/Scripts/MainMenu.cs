@@ -1,4 +1,4 @@
-// Handles main menu actions such as Play, Continue, and Quit Also controls the visibility of the Continue button based on save data.
+// Handles main menu actions such as Play, Continue, and Quit. Also controls the visibility of the Continue button based on save data.
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,11 +17,7 @@ public class MainMenu : MonoBehaviour
         if (continueButton != null)
             continueButton.SetActive(SaveManager.HasSave());
     }
-
- 
-    // Starts a new game.
-    // Clears any existing save data and loads the game scene.
-  
+    
     public void PlayGame()
     {
         // Remove previous save to start fresh
