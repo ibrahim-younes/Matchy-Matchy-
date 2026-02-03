@@ -29,6 +29,10 @@ public class MatchGameManager : MonoBehaviour
         new GridSize(5,6),
         new GridSize(3,3),
     };
+    
+    [Header("Start Reveal")]
+    [SerializeField] private bool revealAllAtStart = true;
+    [SerializeField] private float startRevealDuration = 2f;
 
     [Tooltip("If true: choose next level randomly. If false: cycle in order.")]
     [SerializeField] private bool randomizeNextLevel = false;
@@ -71,6 +75,8 @@ public class MatchGameManager : MonoBehaviour
     private bool compareWorkerRunning;
     private bool isGameOver;
     private bool isPaused;
+    private bool inputLocked;
+
 
     private int currentLevelIndex;
     private int currentRows;
@@ -140,6 +146,9 @@ public class MatchGameManager : MonoBehaviour
 
         OnNewLevel?.Invoke();
         OnStatsChanged?.Invoke(score, turns);
+        
+        if (revealAllAtStart)
+            StartCoroutine(RevealAllCardsAtStart());
     }
 
     // Used by UIController when saving
@@ -154,7 +163,7 @@ public class MatchGameManager : MonoBehaviour
 
     public void TryFlip(CardView card)
     {
-        if (isGameOver || isPaused) return;
+        if (isGameOver || isPaused || inputLocked) return;
         if (card == null || card.IsMatched || card.IsAnimating || card.IsFaceUp) return;
 
         StartCoroutine(FlipUpFlow(card));
@@ -183,6 +192,30 @@ public class MatchGameManager : MonoBehaviour
             if (!compareWorkerRunning)
                 StartCoroutine(CompareWorker());
         }
+    }
+    
+    private IEnumerator RevealAllCardsAtStart()
+    {
+        inputLocked = true;
+
+        // make sure any leftover comparisons are cleared
+        faceUpUnmatched.Clear();
+        compareQueue.Clear();
+
+        // show all cards instantly (no animation)
+        for (int i = 0; i < all.Count; i++)
+            if (all[i] != null && !all[i].IsMatched)
+                all[i].ForceFaceUpInstant();
+        
+        // wait for a couple of seconds
+        yield return new WaitForSecondsRealtime(startRevealDuration);
+
+        // hide all cards again instantly
+        for (int i = 0; i < all.Count; i++)
+            if (all[i] != null && !all[i].IsMatched)
+                all[i].ForceFaceDownInstant();
+
+        inputLocked = false;
     }
 
     private IEnumerator CompareWorker()

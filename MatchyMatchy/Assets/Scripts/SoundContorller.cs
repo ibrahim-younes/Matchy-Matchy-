@@ -8,6 +8,13 @@ public class SoundContorller : MonoBehaviour
     public AudioClip mismatchClip;
     public AudioClip gameOverClip;
 
+    [Header("Volume")]
+    [Range(0f, 1f)] public float masterVolume = 1f;
+    [Range(0f, 1f)] public float flipVolume = 1f;
+    [Range(0f, 1f)] public float matchVolume = 1f;
+    [Range(0f, 1f)] public float mismatchVolume = 1f;
+    [Range(0f, 1f)] public float gameOverVolume = 1f;
+
     private AudioSource src;
 
     void Awake()
@@ -17,14 +24,14 @@ public class SoundContorller : MonoBehaviour
         src.playOnAwake = false;
     }
 
-    public void PlayFlip()     => Play(flipClip);
-    public void PlayMatch()    => Play(matchClip);
-    public void PlayMismatch() => Play(mismatchClip);
-    public void PlayGameOver() => Play(gameOverClip);
+    public void PlayFlip()     => Play(flipClip, flipVolume);
+    public void PlayMatch()    => Play(matchClip, matchVolume);
+    public void PlayMismatch() => Play(mismatchClip, mismatchVolume);
+    public void PlayGameOver() => Play(gameOverClip, gameOverVolume);
 
-    private void Play(AudioClip clip)
+    private void Play(AudioClip clip, float volume)
     {
         if (clip == null || src == null) return;
-        src.PlayOneShot(clip);
+        src.PlayOneShot(clip, volume * masterVolume);
     }
 }

@@ -157,7 +157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 590, y: -84.99994}
+  m_AnchoredPosition: {x: 590, y: -79}
   m_SizeDelta: {x: 214, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &41592161
@@ -873,6 +873,8 @@ MonoBehaviour:
     cols: 6
   - rows: 3
     cols: 3
+  revealAllAtStart: 1
+  startRevealDuration: 2
   randomizeNextLevel: 0
   allowOddByBlockingOneSlot: 1
   revealBeforeCompare: 0.35
@@ -1411,11 +1413,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
+  m_audioClip: {fileID: 8300000, guid: 37e669a3ec9b7b84a9c12fa5011a957f, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.5
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -1513,6 +1515,11 @@ MonoBehaviour:
   matchClip: {fileID: 8300000, guid: 114264eb9b3a6224490a1af9a46b6d0b, type: 3}
   mismatchClip: {fileID: 8300000, guid: cd9e239b75371f144b34ebba5047da5a, type: 3}
   gameOverClip: {fileID: 8300000, guid: ffe1d5cea6dd2424eb7e6123c218fdae, type: 3}
+  masterVolume: 0.6
+  flipVolume: 0.5
+  matchVolume: 0.5
+  mismatchVolume: 0.5
+  gameOverVolume: 0.1
 --- !u!1 &1149596674
 GameObject:
   m_ObjectHideFlags: 0
@@ -1726,7 +1733,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.9150943, b: 0.8617958, a: 1}
+  m_Color: {r: 0.764151, g: 0.27033645, b: 0.35310194, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2437,7 +2444,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 180.00006, y: -87.99994}
+  m_AnchoredPosition: {x: 180.00006, y: -82}
   m_SizeDelta: {x: 214, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1710142007
@@ -2649,15 +2656,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.3490566, b: 0.106849015, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: ac605150de840924591e801b7593d42e, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2846,8 +2853,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 40}
-  m_SizeDelta: {x: 850.69995, y: 132.86}
+  m_AnchoredPosition: {x: 0, y: 70}
+  m_SizeDelta: {x: 956.4, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2074213048
 MonoBehaviour:
@@ -2869,7 +2876,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Well Done !
+  m_text: Well Done!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -2896,8 +2903,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 110
-  m_fontSizeBase: 110
+  m_fontSize: 130
+  m_fontSizeBase: 130
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
