@@ -922,22 +922,27 @@ MonoBehaviour:
   cardPrefab: {fileID: 6491068491522382784, guid: 0f059831b2746f746910e1a7df121852, type: 3}
   backSprite: {fileID: 21300000, guid: 97901401c6b0be044966a3a133b7edad, type: 3}
   faceSprites:
-  - {fileID: 21300000, guid: bce557ca534edc34687a93a99d1c59a1, type: 3}
+  - {fileID: 21300000, guid: d0cebc2849470aa45882743c82690dea, type: 3}
   - {fileID: 21300000, guid: ba4db38750091d643bb7e199a2aabedf, type: 3}
+  - {fileID: 21300000, guid: bce557ca534edc34687a93a99d1c59a1, type: 3}
   - {fileID: 21300000, guid: 1c12188bd9695384baab6449b35437a3, type: 3}
   - {fileID: 21300000, guid: 40071ca0681f222448ad45e9d6825349, type: 3}
   - {fileID: 21300000, guid: 700e6e47639e150478970b62e74c65d1, type: 3}
   - {fileID: 21300000, guid: deab7d493f75aae4ea8799a3aaea8c35, type: 3}
   - {fileID: 21300000, guid: c2ccda3cac38f0246960f2ec62fbf572, type: 3}
+  - {fileID: 21300000, guid: f6cc226b003e58542831051bc581c665, type: 3}
   - {fileID: 21300000, guid: 874e7f62bab44134abccecf979f1e4c6, type: 3}
   - {fileID: 21300000, guid: 549ed4a90eb22c64f8d357f521fe1f0a, type: 3}
   - {fileID: 21300000, guid: 6681c59a16ca90740bd642b00593ce22, type: 3}
   - {fileID: 21300000, guid: f9fb7bc804a17b5478749ea2a47bc637, type: 3}
   - {fileID: 21300000, guid: 3c637438f6fff974dafae22c29069825, type: 3}
   - {fileID: 21300000, guid: cbdb31b12816dcc468e4627ff0c02f30, type: 3}
+  - {fileID: 21300000, guid: 1dc7489f1aacc1d4b82104eb5565cd2a, type: 3}
   - {fileID: 21300000, guid: 6e7a27fdca2ad414bb428fe692870b50, type: 3}
   - {fileID: 21300000, guid: 98872677e6ebd3e43988355a4e299c48, type: 3}
   - {fileID: 21300000, guid: b5ca28a0f6f6f8d4fac1afb0426d7ec8, type: 3}
+  - {fileID: 21300000, guid: 6880eef5f8743a141999070066b393b4, type: 3}
+  - {fileID: 21300000, guid: bede8508c8a0a324c985701d9b4a27ad, type: 3}
   levels:
   - rows: 2
     cols: 2
